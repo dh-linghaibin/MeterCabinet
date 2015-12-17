@@ -21,6 +21,7 @@ void Rs485Init(void)
 	PD_DDR |= BIT(7);
 	PD_CR1 |= BIT(7); 
 	PD_CR2 |= BIT(7);
+    
 	RS485_DR = 0;
 	UART3_CR1=0x00;
 	UART3_CR2=0x00;
@@ -36,6 +37,8 @@ void Rs485Init(void)
 	TIM1_ARRL = 0X01;
 	TIM1_IER = 0X01;
 	TIM1_CR1 = 0X01;
+    RS485_DR = 0;
+    //Rs485Int(1);
 }
 
 static u8 rs485_send_ok;
@@ -87,9 +90,9 @@ u8 Rs485Check(void)
     u8 check_b = 0;
     u8 i_count = 0;
     
-    check_a = Rs485_data[1] + Rs485_data[2];
+    check_a = Rs485_data[0] + Rs485_data[1];
     
-    for(i_count = 1;i_count < 10;i_count++)
+    for(i_count = 2;i_count < 11;i_count++)
     {
         check_b += Rs485_data[i_count];
     }
@@ -124,17 +127,17 @@ void Rs485FlagClear(void)
 #pragma vector=0x16
 __interrupt void UART3_TX_IRQHandler(void)
 {
-    static u8 rs485_count = 0;
+    static u8 rs485_count = 1;
     asm("sim");//
     UART3_SR&= ~(1<<6);//
     UART3_DR = array[rs485_count];
-    if(rs485_count < 15)
+    if(rs485_count < 16)
     {
       rs485_count++;
     }
     else
     {
-        rs485_count = 0;
+        rs485_count = 1;
         RS485_DR = 0;
         UART3_CR2 &= ~BIT(6);//
         rs485_send_ok = 0;
@@ -166,7 +169,7 @@ __interrupt void UART3_RX_IRQHandler(void)
     {
         Rs485_data[rs485_add] = data;
         rs485_add++;
-        if(rs485_add == 12)
+        if(rs485_add == 15)
         {
             rs485_sta = 0;
             rs485_add = 0;

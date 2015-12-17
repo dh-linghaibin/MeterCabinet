@@ -5,12 +5,12 @@
 *linghaibin Steven
 *
 */
+#include "setppermotor.h"
 #include "manipulator.h"
 #include "equipment.h"
 #include "eeprom.h"
 #include "rs485.h"
 #include "lcd.h"
-#include "setppermotor.h"
 
 int main(void)
 {
@@ -20,11 +20,13 @@ int main(void)
   EeepromInit();//eeprom Unlock
   Rs485Init();//com init  and TIM3 init
   SetpInit();//setpipulator init and TIM3 init
-  LcdInit();//12864 lcd init
+  LcdInit();//12864 lcd init 
+  MeunShow();
+  INTEN
   while(1)
   {
     ManipuBunRead();//Starts keys
-    
+   // Rs485Send(EquipGetAddr(),0x00,0,0,0,0,0,0,0,0,0,0);
     if(Rs485GetFlag() == 0x80)//Data sent over
     {
         if(Rs485Check() == CORRECT)//chaeck
@@ -87,6 +89,7 @@ int main(void)
               Rs485Send(EquipGetAddr(),0,0,0,0,0,0,0,0,0,0,0);
               break;
             default:
+              Rs485Send(EquipGetAddr(),0x22,0,0,0,0,0,0,0,0,0,0);
               break;
             }
         }

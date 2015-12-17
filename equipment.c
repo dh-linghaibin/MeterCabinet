@@ -72,28 +72,28 @@ static u8 equip_addr = 0;
 void EquipAddrRead(void)
 {
 	equip_addr = 0;
-	if(adr_1 == 0)
+	if(adr_4 == 0)
 	{
 		equip_addr |= BIT(0);
 	}else
 	{
 		equip_addr &= ~BIT(0);
 	}
-	if(adr_2 == 0)
+	if(adr_3 == 0)
 	{
 		equip_addr |= BIT(1);
 	}else
 	{
 		equip_addr &= ~BIT(1);
 	}
-	if(adr_3 == 0)
+	if(adr_2 == 0)
 	{
 		equip_addr |= BIT(2);
 	}else
 	{
 		equip_addr &= ~BIT(2);
 	}
-	if(adr_4 == 0)
+	if(adr_1 == 0)
 	{
 		equip_addr |= BIT(3);
 	}else

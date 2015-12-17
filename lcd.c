@@ -4,12 +4,12 @@
 #include "iostm8s207m8.h"
 #include "delay.h"
 
-#define CS_H    PH_ODR_bit.ODR4 = 1     //PH4 E
-#define CS_L    PH_ODR_bit.ODR4 = 0
+#define CS_H    PH_ODR_bit.ODR6 = 1     //PH4 E
+#define CS_L    PH_ODR_bit.ODR6 = 0
 #define SID_H   PH_ODR_bit.ODR5 = 1     //PH5 SID
 #define SID_L   PH_ODR_bit.ODR5 = 0
-#define SCLK_H  PH_ODR_bit.ODR6 = 1     //PH6 SCLK
-#define SCLK_L  PH_ODR_bit.ODR6 = 0
+#define SCLK_H  PH_ODR_bit.ODR4 = 1     //PH6 SCLK
+#define SCLK_L  PH_ODR_bit.ODR4 = 0
 
 /*
 *send 8 bit data to lcd

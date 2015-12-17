@@ -5,5 +5,7 @@
 
 #include "type.h"
 
+void MeunShow();
+
 #endif
 

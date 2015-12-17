@@ -35,5 +35,6 @@ u8 Rs485GetFlag(void);
 void Rs485FlagClear(void);
 u8 Rs485Check(void);
 u8 Rs485GetDate(u8 num);
+void Rs485Int(u8 mode);
 
 #endif
