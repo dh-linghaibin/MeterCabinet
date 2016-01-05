@@ -125,7 +125,7 @@ u8 EquipButon1(void)
     static u8 button_bit = 0;
     if(BUTTON_IN1 == 0)
     {
-        if(button_count_small < 50)
+        if(button_count_small < 10)
         {
             button_count_small++;
         }
@@ -185,7 +185,7 @@ u8 EquipButon2(void)
     static u8 button_bit = 0;
     if(BUTTON_IN2 == 0)
     {
-        if(button_count_small < 50)
+        if(button_count_small < 10)
         {
             button_count_small++;
         }

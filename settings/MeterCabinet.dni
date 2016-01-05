@@ -36,11 +36,16 @@ ActionState=1
 Enabled=0
 ShowSource=1
 [DebugChecksum]
-Checksum=1799060429
+Checksum=438352542
 [CallStack]
 ShowArgs=0
 [Disassembly]
 MixedMode=1
+[watch_formats]
+Fmt0={W}0:cabinet_angle	3	0
+Fmt1={W}0:cabinet_position	3	0
+Fmt2={W}42:cabinet_angle	3	0
+Fmt3={W}42:cabinet_position	3	0
 [DataSample]
 LogEnabled=0
 GraphEnabled=0
@@ -56,8 +61,9 @@ LogFile=_ ""
 [Breakpoints]
 Bp0=_ "STD_DATA" "EquipGetAddr" 1 0 0 3 0 "" 0 ""
 Bp1=_ "STD_CODE" "{$PROJ_DIR$\..\equipment.c}.112.5" 0 0 0 0 "" 0 ""
-Bp2=_ "STD_CODE" "{$PROJ_DIR$\rs485.c}.93.5" 1 0 0 0 "" 0 ""
-Count=3
+Bp2=_ "STD_DATA" "Drawer_back_place" 0 0 0 3 0 "" 0 ""
+Bp3=_ "STD_CODE" "{$PROJ_DIR$\setppermotor.c}.329.3" 1 0 0 0 "" 0 ""
+Count=4
 [Aliases]
 Count=0
 SuppressDialog=0

@@ -108,9 +108,17 @@ void ManipuInit(void)
     //DC_CSR |= BIT(0)|BIT(3); //Select channel
     ADC_CSR &= ~BIT(6);//No analog Dog
     ADC_CSR &= ~BIT(4);
+    ADC_CSR &= ~BIT(5);
+    
+    ADC_CSR |= BIT(3);
+    ADC_CSR &= ~BIT(2);
+    ADC_CSR |= BIT(1);
+    ADC_CSR &= ~BIT(0);
+    
     ADC_CR1 |= BIT(1);//Continuous conversion mode
     ADC_CR2 |= BIT(1);//Scan mode is enabled
-    ADC_TDRL = 0x01;
+    //ADC_TDRL = 0x01;
+    //ADC_CR1 &= ~BIT(0);
     
     data = EepromRead(20); //clear position
     if(data != 0x55)
@@ -332,7 +340,7 @@ u8 ManipuCheckLayer(u8 data,u8 cmd)
           }
           else
           {
-            return 0x20;
+            return 0x22;
           }
           break;
         case 2:
@@ -342,7 +350,7 @@ u8 ManipuCheckLayer(u8 data,u8 cmd)
           }
           else
           {
-            return 0x20;
+            return 0x22;
           }
           break;
         case 3:
@@ -352,7 +360,7 @@ u8 ManipuCheckLayer(u8 data,u8 cmd)
           }
           else
           {
-            return 0x20;
+            return 0x22;
           }
           break;
         case 4:
@@ -362,7 +370,7 @@ u8 ManipuCheckLayer(u8 data,u8 cmd)
           }
           else
           {
-            return 0x20;
+            return 0x22;
           }
           break;
         case 5:
@@ -372,7 +380,7 @@ u8 ManipuCheckLayer(u8 data,u8 cmd)
           }
           else
           {
-            return 0x20;
+            return 0x22;
           }
           break;
         case 6:
@@ -382,7 +390,7 @@ u8 ManipuCheckLayer(u8 data,u8 cmd)
           }
           else
           {
-            return 0x20;
+            return 0x22;
           }
           break;
         case 7:
@@ -392,7 +400,7 @@ u8 ManipuCheckLayer(u8 data,u8 cmd)
           }
           else
           {
-            return 0x20;
+            return 0x22;
           }
           break;
         case 8:
@@ -402,7 +410,7 @@ u8 ManipuCheckLayer(u8 data,u8 cmd)
           }
           else
           {
-            return 0x20;
+            return 0x22;
           }
           break;
         default:
@@ -421,7 +429,7 @@ u8 ManipuCheckLayer(u8 data,u8 cmd)
           }
           else
           {
-            return 0x20;
+            return 0x22;
           }
           break;
         case 2:
@@ -431,7 +439,7 @@ u8 ManipuCheckLayer(u8 data,u8 cmd)
           }
           else
           {
-            return 0x20;
+            return 0x22;
           }
           break;
         case 3:
@@ -441,7 +449,7 @@ u8 ManipuCheckLayer(u8 data,u8 cmd)
           }
           else
           {
-            return 0x20;
+            return 0x22;
           }
           break;
         case 4:
@@ -451,7 +459,7 @@ u8 ManipuCheckLayer(u8 data,u8 cmd)
           }
           else
           {
-            return 0x20;
+            return 0x22;
           }
           break;
         case 5:
@@ -461,7 +469,7 @@ u8 ManipuCheckLayer(u8 data,u8 cmd)
           }
           else
           {
-            return 0x20;
+            return 0x22;
           }
           break;
         case 6:
@@ -471,7 +479,7 @@ u8 ManipuCheckLayer(u8 data,u8 cmd)
           }
           else
           {
-            return 0x20;
+            return 0x22;
           }
           break;
         case 7:
@@ -481,7 +489,7 @@ u8 ManipuCheckLayer(u8 data,u8 cmd)
           }
           else
           {
-            return 0x20;
+            return 0x22;
           }
           break;
         case 8:
@@ -491,7 +499,7 @@ u8 ManipuCheckLayer(u8 data,u8 cmd)
           }
           else
           {
-            return 0x20;
+            return 0x22;
           }
           break;
         default:
@@ -508,6 +516,11 @@ u8 ManipuCheckOk(void)
     data |= Shield;
 
     return data;
+}
+
+void ManipuSetShiel(u8 shiel)
+{
+    Shield = shiel;
 }
 
 u8 ManipuLight(u8 cmd,u8 data)

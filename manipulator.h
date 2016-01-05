@@ -17,6 +17,6 @@ u8 ManipuBunRead(void);
 
 u8 ManipuGetNum(u8 cmd);
 u8 ManipuNumClear(void);
-
+void ManipuSetShiel(u8 shiel);
 
 #endif

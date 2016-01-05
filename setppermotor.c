@@ -8,15 +8,15 @@
 static const u16 timerlow[15]={57000,44000,30000,20000,15000,
 12000,11000,10000,9000,8500,8000,7500,7300,7100,7000};
 
-#define Total_Circle 360
-#define Average_Pulse	175	 //Single drawer pulse equivalent 175
+#define Total_Circle 400
+#define Average_Pulse	35	 //Single drawer pulse equivalent 175
 
 #define moto_dr PA_ODR_bit.ODR4 /*Motor Direction*/
 #define moto_hz PA_ODR_bit.ODR3 /*Motor speed*/
 #define b_sar   PD_IDR_bit.IDR0 
 
 static u8 cabinet_position = 0;
-static u8 cabinet_angle = 0;
+static u16 cabinet_angle = 0;
 
 void SetpInit(void)
 {
@@ -43,13 +43,14 @@ void SetpInit(void)
 	TIM3_IER = 0X01;
 	TIM3_CR1 = 0X00;
     
-    
+    //EepromWrite(11,11);
+   // EepromWrite(12,0);
     
     if(EepromRead(14) == 0x55)
     {
         cabinet_position = EepromRead(10); //clear position
         cabinet_angle = EepromRead(11);
-        cabinet_angle |= EepromRead(12)>>8;
+        cabinet_angle |= (EepromRead(12)>>8);
     }
     else
     {
@@ -230,7 +231,10 @@ static u32 steps_half;
 static u32 steps_count;  
 static u32 steps_count2;  
 static u32 steps_keep_count;
-
+static u16 stop_arr[16] = {
+0,23,54,77,100,122,154,177,200,223,254,277,300,322,354,377,
+};
+	
 //以下变量用于步进电机运行控制
  _Bool Encoder_bz;
 u16 Encoder_count;/*编码器计数*/
@@ -240,6 +244,7 @@ u8 SetpRotation(u8 tar_pos)
     u16 angle = 0;//save Reaches the required angular position
     u16 result_move = 0;//需要旋转的角度值
     //u32 steps; //电机需要旋转的脉冲
+    /*
     if(tar_pos > 14)
     {
         angle =  (u16)( ( (tar_pos-1)*20.5) + 32);
@@ -256,12 +261,44 @@ u8 SetpRotation(u8 tar_pos)
     {
         angle =  (u16)( ( (tar_pos-1)*20.5) + 8);
     }
-    else
+    else if(tar_pos > 0)
     {
         angle =  (u16)( (tar_pos-1)*20.5);
     }
-    
+    else
+    {
+        return 0x22;
+    }*/
+    /*
     if(angle < cabinet_angle)
+	{
+		if((cabinet_angle-angle) <= (Total_Circle/2))
+		{
+			moto_dr = 1;
+			result_move = cabinet_angle-angle;
+		}
+		else
+		{
+			moto_dr = 0;
+			result_move=Total_Circle+angle-cabinet_angle;
+		}
+	}
+	else if(angle>=cabinet_angle)
+	{
+		if((angle-cabinet_angle)<=(Total_Circle /2))
+		{
+			moto_dr = 0;
+			result_move=angle - cabinet00000000000000000000000000000000000000000000000000000000000000000_angle;
+		}
+		else if((angle - cabinet_angle)>(Total_Circle /2))
+		{
+			moto_dr = 1;
+			result_move=Total_Circle-angle+cabinet_angle;
+		}
+	}
+    */
+    angle = stop_arr[tar_pos-1];
+    if(cabinet_angle < angle)
 	{
 		if((angle-cabinet_angle) <= (Total_Circle/2))
 		{
@@ -279,9 +316,9 @@ u8 SetpRotation(u8 tar_pos)
 		if((cabinet_angle-angle)<=(Total_Circle /2))
 		{
 			moto_dr = 0;/*改变方向*/
-			result_move=cabinet_angle - angle;
+			result_move=cabinet_angle-angle;
 		}
-		else if((cabinet_angle - angle)>(Total_Circle /2))
+		else if((cabinet_angle-angle)>(Total_Circle /2))
 		{
 			moto_dr = 1;/*改变方向*/
 			result_move=Total_Circle-cabinet_angle+angle;

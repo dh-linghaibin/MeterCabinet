@@ -10,14 +10,18 @@
 #include "equipment.h"
 #include "eeprom.h"
 #include "rs485.h"
+#include "menu.h"
 #include "lcd.h"
+
+u8 i = 1;
+
 
 int main(void)
 {
   EquipInit();//bsp init
+  EeepromInit();//eeprom Unlock
   EquipAddrRead();//read the machine address
   ManipuInit();//manipulator init and AD init
-  EeepromInit();//eeprom Unlock
   Rs485Init();//com init  and TIM3 init
   SetpInit();//setpipulator init and TIM3 init
   LcdInit();//12864 lcd init 
@@ -25,6 +29,26 @@ int main(void)
   INTEN
   while(1)
   {
+    if(EquipButon1() == 4)
+    {
+        while(1)
+        {
+            SetpRotation(i);
+            if(i < 16)
+            {
+                i++;
+            }
+            else
+            {
+                i = 1;
+            }
+            MeunShow();
+        }
+    }
+    if(EquipButon2() == 4)
+    {
+        SetpZero();
+    }
     ManipuBunRead();//Starts keys
    // Rs485Send(EquipGetAddr(),0x00,0,0,0,0,0,0,0,0,0,0);
     if(Rs485GetFlag() == 0x80)//Data sent over
@@ -49,6 +73,7 @@ int main(void)
               {
                 SetpRotation(Rs485GetDate(2));
                 Rs485Send(EquipGetAddr(),TRUE,0,0,0,0,0,0,0,0,0,0);
+                MeunShow();
               }
               else
               {
@@ -86,10 +111,18 @@ int main(void)
               Rs485Send(EquipGetAddr(),ManipuNumClear(),0,0,0,0,0,0,0,0,0,0);
               break;
             case Detection_barrier:
-              Rs485Send(EquipGetAddr(),0,0,0,0,0,0,0,0,0,0,0);
+              ManipuSetShiel(Rs485GetDate(2));
+              if(ManipuCheckOk() == 0xff)
+              {
+                Rs485Send(EquipGetAddr(),TRUE,ManipuCheckOk(),0,0,0,0,0,0,0,0,0);
+              }
+              else
+              {
+                Rs485Send(EquipGetAddr(),FALSE,ManipuCheckOk(),0,0,0,0,0,0,0,0,0);
+              }
               break;
             default:
-              Rs485Send(EquipGetAddr(),0x22,0,0,0,0,0,0,0,0,0,0);
+              Rs485Send(EquipGetAddr(),FALSE,0,0,0,0,0,0,0,0,0,0);
               break;
             }
         }
