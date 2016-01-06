@@ -31,6 +31,14 @@ int main(void)
   {
     if(EquipButon1() == 4)
     {
+        if(i == 0) {
+            i = 1;
+            ManipuDir(1,0);
+        } else {
+            i = 0;
+            ManipuDir(1,1);
+        }
+        /*
         while(1)
         {
             SetpRotation(i);
@@ -43,7 +51,7 @@ int main(void)
                 i = 1;
             }
             MeunShow();
-        }
+        }*/
     }
     if(EquipButon2() == 4)
     {

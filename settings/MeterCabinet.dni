@@ -36,7 +36,7 @@ ActionState=1
 Enabled=0
 ShowSource=1
 [DebugChecksum]
-Checksum=438352542
+Checksum=-1803351664
 [CallStack]
 ShowArgs=0
 [Disassembly]
@@ -62,8 +62,10 @@ LogFile=_ ""
 Bp0=_ "STD_DATA" "EquipGetAddr" 1 0 0 3 0 "" 0 ""
 Bp1=_ "STD_CODE" "{$PROJ_DIR$\..\equipment.c}.112.5" 0 0 0 0 "" 0 ""
 Bp2=_ "STD_DATA" "Drawer_back_place" 0 0 0 3 0 "" 0 ""
-Bp3=_ "STD_CODE" "{$PROJ_DIR$\setppermotor.c}.329.3" 1 0 0 0 "" 0 ""
-Count=4
+Bp3=_ "STD_CODE" "{C:\Users\MyPC\Desktop}.329.3" 0 0 0 0 "" 0 ""
+Bp4=_ "STD_CODE" "{$PROJ_DIR$\manipulator.c}.250.21" 1 0 0 0 "" 0 ""
+Bp5=_ "STD_CODE" "{$PROJ_DIR$\manipulator.c}.338.21" 1 0 0 0 "" 0 ""
+Count=6
 [Aliases]
 Count=0
 SuppressDialog=0

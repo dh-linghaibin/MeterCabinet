@@ -174,8 +174,9 @@ u8 ManipuDir(u8 bit,u8 dir)
     u16 back_count = 0;//In place to ensure that
     u16 current = 0;//sava current value
     u16 current_count = 0;//sava current count
+    u8 current_count_small = 0;
     u8 user_data = 0;
-    
+    /*
     user_data = EepromRead(21);
     if(user_data == 0xff)
     {
@@ -216,7 +217,7 @@ u8 ManipuDir(u8 bit,u8 dir)
     else
     {
         EepromWrite(21,user_data+1);
-    }
+    }*/
     
     if(dir == 0)//back
     {
@@ -246,9 +247,9 @@ u8 ManipuDir(u8 bit,u8 dir)
                     }
                     //Current collection
                     current = GetAd(10);
-                    if(current > 600)
+                    if(current > 50000)
                     {
-                        if(current_count < 500)
+                        if(current_count < 1000)
                         {
                             current_count++;
                         }
@@ -262,8 +263,15 @@ u8 ManipuDir(u8 bit,u8 dir)
                         current_count = 0;
                     }
                     //count wait
-                     time_count++;
+                    if(current_count_small < 3) {
+                        current_count_small++;
+                    } else {
+                        current_count_small = 0;
+                        time_count++;
+                    }
                 }
+                MAN_DIR1 = 0;//Set Direction
+                MAN_EN1 = 0;//Enable manipulator
                 if(MAN_BACK1 == 1)//To the positon of success
                 {
                     button_flag = 1;//Start Check keys
@@ -304,6 +312,69 @@ u8 ManipuDir(u8 bit,u8 dir)
         switch(bit)
         {
         case 1:
+            if(MAN_OUT1 == 0)//Not in place
+            {
+                MAN_DIR1 = 0;//Set Direction
+                MAN_EN1 = 1;//Enable manipulator
+                while(time_count < 60000)//time out 
+                {
+                    if(MAN_OUT1 == 1)//position ok
+                    {
+                        if(back_count < 500)
+                        {
+                            back_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        back_count = 0;
+                    }
+                    //Current collection
+                    current = GetAd(10);
+                    if(current > 50000)
+                    {
+                        if(current_count < 1000)
+                        {
+                            current_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        current_count = 0;
+                    }
+                    //count wait
+                     if(current_count_small < 3) {
+                        current_count_small++;
+                    } else {
+                        current_count_small = 0;
+                        time_count++;
+                    }
+                }
+                MAN_DIR1 = 0;//Set Direction
+                MAN_EN1 = 0;//Enable manipulator
+                if(MAN_OUT1 == 1)//To the positon of success
+                {
+                    button_flag = 1;//Start Check keys
+                    return 0x21;
+                }
+                else//Failure to position
+                {
+                    return 0x22;
+                }
+            }
+            else//position  ok
+            {
+                button_flag = 1;//Start Check keys
+                return 0x21;
+            }
           break;
         case 2:
           break;
