@@ -176,48 +176,14 @@ u8 ManipuDir(u8 bit,u8 dir)
     u16 current_count = 0;//sava current count
     u8 current_count_small = 0;
     u8 user_data = 0;
-    /*
-    user_data = EepromRead(21);
-    if(user_data == 0xff)
-    {
-        user_data = EepromRead(22);
-        if(user_data == 0xff)
-        {
-            user_data = EepromRead(23);
-            if(user_data == 0xff)
-            {
-                user_data = EepromRead(24);
-                if(user_data == 0xff)
-                {
-                    user_data = EepromRead(25);
-                    if(user_data == 0xff)
-                    {
-                      
-                    }
-                    else
-                    {
-                        EepromWrite(25,user_data+1);
-                    }
-                }
-                else
-                {
-                     EepromWrite(24,user_data+1);
-                }
-            }
-            else
-            {
-                EepromWrite(23,user_data+1);
-            }
-        }
-        else
-        {
-            EepromWrite(22,user_data+1);
+    u8 read_add = 21;
+    for(read_add = 21; read_add < 26;read_add++) {
+        user_data = EepromRead(read_add);
+        if(user_data != 0xff) {
+            EepromWrite(read_add,user_data+1);
+            break;
         }
     }
-    else
-    {
-        EepromWrite(21,user_data+1);
-    }*/
     
     if(dir == 0)//back
     {
@@ -289,18 +255,459 @@ u8 ManipuDir(u8 bit,u8 dir)
             }
         break;
         case 2:
+            if(MAN_BACK2 == 0)//Not in place
+            {
+                MAN_DIR2 = 1;//Set Direction
+                MAN_EN2 = 1;//Enable manipulator
+                while(time_count < 60000)//time out 
+                {
+                    if(MAN_BACK2 == 1)//position ok
+                    {
+                        if(back_count < 500)
+                        {
+                            back_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        back_count = 0;
+                    }
+                    //Current collection
+                    current = GetAd(10);
+                    if(current > 50000)
+                    {
+                        if(current_count < 1000)
+                        {
+                            current_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        current_count = 0;
+                    }
+                    //count wait
+                    if(current_count_small < 3) {
+                        current_count_small++;
+                    } else {
+                        current_count_small = 0;
+                        time_count++;
+                    }
+                }
+                MAN_DIR2 = 0;//Set Direction
+                MAN_EN2 = 0;//Enable manipulator
+                if(MAN_BACK2 == 1)//To the positon of success
+                {
+                    button_flag = 1;//Start Check keys
+                    return 0x21;
+                }
+                else//Failure to position
+                {
+                    return 0x22;
+                }
+            }
+            else//position  ok
+            {
+                button_flag = 1;//Start Check keys
+                return 0x21;
+            }
         break;
         case 3:
+            if(MAN_BACK3 == 0)//Not in place
+            {
+                MAN_DIR3 = 1;//Set Direction
+                MAN_EN3 = 1;//Enable manipulator
+                while(time_count < 60000)//time out 
+                {
+                    if(MAN_BACK3 == 1)//position ok
+                    {
+                        if(back_count < 500)
+                        {
+                            back_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        back_count = 0;
+                    }
+                    //Current collection
+                    current = GetAd(10);
+                    if(current > 50000)
+                    {
+                        if(current_count < 1000)
+                        {
+                            current_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        current_count = 0;
+                    }
+                    //count wait
+                    if(current_count_small < 3) {
+                        current_count_small++;
+                    } else {
+                        current_count_small = 0;
+                        time_count++;
+                    }
+                }
+                MAN_DIR3 = 0;//Set Direction
+                MAN_EN3 = 0;//Enable manipulator
+                if(MAN_BACK3 == 1)//To the positon of success
+                {
+                    button_flag = 1;//Start Check keys
+                    return 0x21;
+                }
+                else//Failure to position
+                {
+                    return 0x22;
+                }
+            }
+            else//position  ok
+            {
+                button_flag = 1;//Start Check keys
+                return 0x21;
+            }
         break;
         case 4:
+            if(MAN_BACK4 == 0)//Not in place
+            {
+                MAN_DIR4 = 1;//Set Direction
+                MAN_EN4 = 1;//Enable manipulator
+                while(time_count < 60000)//time out 
+                {
+                    if(MAN_BACK4 == 1)//position ok
+                    {
+                        if(back_count < 500)
+                        {
+                            back_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        back_count = 0;
+                    }
+                    //Current collection
+                    current = GetAd(10);
+                    if(current > 50000)
+                    {
+                        if(current_count < 1000)
+                        {
+                            current_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        current_count = 0;
+                    }
+                    //count wait
+                    if(current_count_small < 3) {
+                        current_count_small++;
+                    } else {
+                        current_count_small = 0;
+                        time_count++;
+                    }
+                }
+                MAN_DIR4 = 0;//Set Direction
+                MAN_EN4 = 0;//Enable manipulator
+                if(MAN_BACK4 == 1)//To the positon of success
+                {
+                    button_flag = 1;//Start Check keys
+                    return 0x21;
+                }
+                else//Failure to position
+                {
+                    return 0x22;
+                }
+            }
+            else//position  ok
+            {
+                button_flag = 1;//Start Check keys
+                return 0x21;
+            }
         break;
         case 5:
+            if(MAN_BACK5 == 0)//Not in place
+            {
+                MAN_DIR5 = 1;//Set Direction
+                MAN_EN5 = 1;//Enable manipulator
+                while(time_count < 60000)//time out 
+                {
+                    if(MAN_BACK5 == 1)//position ok
+                    {
+                        if(back_count < 500)
+                        {
+                            back_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        back_count = 0;
+                    }
+                    //Current collection
+                    current = GetAd(10);
+                    if(current > 50000)
+                    {
+                        if(current_count < 1000)
+                        {
+                            current_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        current_count = 0;
+                    }
+                    //count wait
+                    if(current_count_small < 3) {
+                        current_count_small++;
+                    } else {
+                        current_count_small = 0;
+                        time_count++;
+                    }
+                }
+                MAN_DIR5 = 0;//Set Direction
+                MAN_EN5 = 0;//Enable manipulator
+                if(MAN_BACK5 == 1)//To the positon of success
+                {
+                    button_flag = 1;//Start Check keys
+                    return 0x21;
+                }
+                else//Failure to position
+                {
+                    return 0x22;
+                }
+            }
+            else//position  ok
+            {
+                button_flag = 1;//Start Check keys
+                return 0x21;
+            }
         break;
         case 6:
+            if(MAN_BACK6 == 0)//Not in place
+            {
+                MAN_DIR6 = 1;//Set Direction
+                MAN_EN6 = 1;//Enable manipulator
+                while(time_count < 60000)//time out 
+                {
+                    if(MAN_BACK6 == 1)//position ok
+                    {
+                        if(back_count < 500)
+                        {
+                            back_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        back_count = 0;
+                    }
+                    //Current collection
+                    current = GetAd(10);
+                    if(current > 50000)
+                    {
+                        if(current_count < 1000)
+                        {
+                            current_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        current_count = 0;
+                    }
+                    //count wait
+                    if(current_count_small < 3) {
+                        current_count_small++;
+                    } else {
+                        current_count_small = 0;
+                        time_count++;
+                    }
+                }
+                MAN_DIR6 = 0;//Set Direction
+                MAN_EN6 = 0;//Enable manipulator
+                if(MAN_BACK6 == 1)//To the positon of success
+                {
+                    button_flag = 1;//Start Check keys
+                    return 0x21;
+                }
+                else//Failure to position
+                {
+                    return 0x22;
+                }
+            }
+            else//position  ok
+            {
+                button_flag = 1;//Start Check keys
+                return 0x21;
+            }
         break;
         case 7:
+            if(MAN_BACK7 == 0)//Not in place
+            {
+                MAN_DIR7 = 1;//Set Direction
+                MAN_EN7 = 1;//Enable manipulator
+                while(time_count < 60000)//time out 
+                {
+                    if(MAN_BACK7 == 1)//position ok
+                    {
+                        if(back_count < 500)
+                        {
+                            back_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        back_count = 0;
+                    }
+                    //Current collection
+                    current = GetAd(10);
+                    if(current > 50000)
+                    {
+                        if(current_count < 1000)
+                        {
+                            current_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        current_count = 0;
+                    }
+                    //count wait
+                    if(current_count_small < 3) {
+                        current_count_small++;
+                    } else {
+                        current_count_small = 0;
+                        time_count++;
+                    }
+                }
+                MAN_DIR7 = 0;//Set Direction
+                MAN_EN7 = 0;//Enable manipulator
+                if(MAN_BACK7 == 1)//To the positon of success
+                {
+                    button_flag = 1;//Start Check keys
+                    return 0x21;
+                }
+                else//Failure to position
+                {
+                    return 0x22;
+                }
+            }
+            else//position  ok
+            {
+                button_flag = 1;//Start Check keys
+                return 0x21;
+            }
         break;
         case 8:
+            if(MAN_BACK8 == 0)//Not in place
+            {
+                MAN_DIR8 = 1;//Set Direction
+                MAN_EN8 = 1;//Enable manipulator
+                while(time_count < 60000)//time out 
+                {
+                    if(MAN_BACK8 == 1)//position ok
+                    {
+                        if(back_count < 500)
+                        {
+                            back_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        back_count = 0;
+                    }
+                    //Current collection
+                    current = GetAd(10);
+                    if(current > 50000)
+                    {
+                        if(current_count < 1000)
+                        {
+                            current_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        current_count = 0;
+                    }
+                    //count wait
+                    if(current_count_small < 3) {
+                        current_count_small++;
+                    } else {
+                        current_count_small = 0;
+                        time_count++;
+                    }
+                }
+                MAN_DIR8 = 0;//Set Direction
+                MAN_EN8 = 0;//Enable manipulator
+                if(MAN_BACK8 == 1)//To the positon of success
+                {
+                    button_flag = 1;//Start Check keys
+                    return 0x21;
+                }
+                else//Failure to position
+                {
+                    return 0x22;
+                }
+            }
+            else//position  ok
+            {
+                button_flag = 1;//Start Check keys
+                return 0x21;
+            }
         break;
         default:
           return 0x22;
@@ -377,18 +784,459 @@ u8 ManipuDir(u8 bit,u8 dir)
             }
           break;
         case 2:
+            if(MAN_OUT2 == 0)//Not in place
+            {
+                MAN_DIR2 = 0;//Set Direction
+                MAN_EN2 = 1;//Enable manipulator
+                while(time_count < 60000)//time out 
+                {
+                    if(MAN_OUT2 == 1)//position ok
+                    {
+                        if(back_count < 500)
+                        {
+                            back_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        back_count = 0;
+                    }
+                    //Current collection
+                    current = GetAd(10);
+                    if(current > 50000)
+                    {
+                        if(current_count < 1000)
+                        {
+                            current_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        current_count = 0;
+                    }
+                    //count wait
+                     if(current_count_small < 3) {
+                        current_count_small++;
+                    } else {
+                        current_count_small = 0;
+                        time_count++;
+                    }
+                }
+                MAN_DIR2 = 0;//Set Direction
+                MAN_EN2 = 0;//Enable manipulator
+                if(MAN_OUT2 == 1)//To the positon of success
+                {
+                    button_flag = 1;//Start Check keys
+                    return 0x21;
+                }
+                else//Failure to position
+                {
+                    return 0x22;
+                }
+            }
+            else//position  ok
+            {
+                button_flag = 1;//Start Check keys
+                return 0x21;
+            }
           break;
         case 3:
+            if(MAN_OUT3 == 0)//Not in place
+            {
+                MAN_DIR3 = 0;//Set Direction
+                MAN_EN3 = 1;//Enable manipulator
+                while(time_count < 60000)//time out 
+                {
+                    if(MAN_OUT3 == 1)//position ok
+                    {
+                        if(back_count < 500)
+                        {
+                            back_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        back_count = 0;
+                    }
+                    //Current collection
+                    current = GetAd(10);
+                    if(current > 50000)
+                    {
+                        if(current_count < 1000)
+                        {
+                            current_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        current_count = 0;
+                    }
+                    //count wait
+                     if(current_count_small < 3) {
+                        current_count_small++;
+                    } else {
+                        current_count_small = 0;
+                        time_count++;
+                    }
+                }
+                MAN_DIR3 = 0;//Set Direction
+                MAN_EN3 = 0;//Enable manipulator
+                if(MAN_OUT3 == 1)//To the positon of success
+                {
+                    button_flag = 1;//Start Check keys
+                    return 0x21;
+                }
+                else//Failure to position
+                {
+                    return 0x22;
+                }
+            }
+            else//position  ok
+            {
+                button_flag = 1;//Start Check keys
+                return 0x21;
+            }
           break;
         case 4:
+            if(MAN_OUT4 == 0)//Not in place
+            {
+                MAN_DIR4 = 0;//Set Direction
+                MAN_EN4 = 1;//Enable manipulator
+                while(time_count < 60000)//time out 
+                {
+                    if(MAN_OUT4 == 1)//position ok
+                    {
+                        if(back_count < 500)
+                        {
+                            back_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        back_count = 0;
+                    }
+                    //Current collection
+                    current = GetAd(10);
+                    if(current > 50000)
+                    {
+                        if(current_count < 1000)
+                        {
+                            current_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        current_count = 0;
+                    }
+                    //count wait
+                     if(current_count_small < 3) {
+                        current_count_small++;
+                    } else {
+                        current_count_small = 0;
+                        time_count++;
+                    }
+                }
+                MAN_DIR4 = 0;//Set Direction
+                MAN_EN4 = 0;//Enable manipulator
+                if(MAN_OUT4 == 1)//To the positon of success
+                {
+                    button_flag = 1;//Start Check keys
+                    return 0x21;
+                }
+                else//Failure to position
+                {
+                    return 0x22;
+                }
+            }
+            else//position  ok
+            {
+                button_flag = 1;//Start Check keys
+                return 0x21;
+            }
           break;
         case 5:
+            if(MAN_OUT5 == 0)//Not in place
+            {
+                MAN_DIR5 = 0;//Set Direction
+                MAN_EN5 = 1;//Enable manipulator
+                while(time_count < 60000)//time out 
+                {
+                    if(MAN_OUT5 == 1)//position ok
+                    {
+                        if(back_count < 500)
+                        {
+                            back_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        back_count = 0;
+                    }
+                    //Current collection
+                    current = GetAd(10);
+                    if(current > 50000)
+                    {
+                        if(current_count < 1000)
+                        {
+                            current_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        current_count = 0;
+                    }
+                    //count wait
+                     if(current_count_small < 3) {
+                        current_count_small++;
+                    } else {
+                        current_count_small = 0;
+                        time_count++;
+                    }
+                }
+                MAN_DIR5 = 0;//Set Direction
+                MAN_EN5 = 0;//Enable manipulator
+                if(MAN_OUT5 == 1)//To the positon of success
+                {
+                    button_flag = 1;//Start Check keys
+                    return 0x21;
+                }
+                else//Failure to position
+                {
+                    return 0x22;
+                }
+            }
+            else//position  ok
+            {
+                button_flag = 1;//Start Check keys
+                return 0x21;
+            }
           break;
         case 6:
+            if(MAN_OUT6 == 0)//Not in place
+            {
+                MAN_DIR6 = 0;//Set Direction
+                MAN_EN6 = 1;//Enable manipulator
+                while(time_count < 60000)//time out 
+                {
+                    if(MAN_OUT6 == 1)//position ok
+                    {
+                        if(back_count < 500)
+                        {
+                            back_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        back_count = 0;
+                    }
+                    //Current collection
+                    current = GetAd(10);
+                    if(current > 50000)
+                    {
+                        if(current_count < 1000)
+                        {
+                            current_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        current_count = 0;
+                    }
+                    //count wait
+                     if(current_count_small < 3) {
+                        current_count_small++;
+                    } else {
+                        current_count_small = 0;
+                        time_count++;
+                    }
+                }
+                MAN_DIR6 = 0;//Set Direction
+                MAN_EN6 = 0;//Enable manipulator
+                if(MAN_OUT6 == 1)//To the positon of success
+                {
+                    button_flag = 1;//Start Check keys
+                    return 0x21;
+                }
+                else//Failure to position
+                {
+                    return 0x22;
+                }
+            }
+            else//position  ok
+            {
+                button_flag = 1;//Start Check keys
+                return 0x21;
+            }
           break;
         case 7:
+            if(MAN_OUT7 == 0)//Not in place
+            {
+                MAN_DIR7 = 0;//Set Direction
+                MAN_EN7 = 1;//Enable manipulator
+                while(time_count < 60000)//time out 
+                {
+                    if(MAN_OUT1 == 1)//position ok
+                    {
+                        if(back_count < 500)
+                        {
+                            back_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        back_count = 0;
+                    }
+                    //Current collection
+                    current = GetAd(10);
+                    if(current > 50000)
+                    {
+                        if(current_count < 1000)
+                        {
+                            current_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        current_count = 0;
+                    }
+                    //count wait
+                     if(current_count_small < 3) {
+                        current_count_small++;
+                    } else {
+                        current_count_small = 0;
+                        time_count++;
+                    }
+                }
+                MAN_DIR7 = 0;//Set Direction
+                MAN_EN7 = 0;//Enable manipulator
+                if(MAN_OUT7 == 1)//To the positon of success
+                {
+                    button_flag = 1;//Start Check keys
+                    return 0x21;
+                }
+                else//Failure to position
+                {
+                    return 0x22;
+                }
+            }
+            else//position  ok
+            {
+                button_flag = 1;//Start Check keys
+                return 0x21;
+            }
           break;
         case 8:
+            if(MAN_OUT8 == 0)//Not in place
+            {
+                MAN_DIR8 = 0;//Set Direction
+                MAN_EN8 = 1;//Enable manipulator
+                while(time_count < 60000)//time out 
+                {
+                    if(MAN_OUT1 == 1)//position ok
+                    {
+                        if(back_count < 500)
+                        {
+                            back_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        back_count = 0;
+                    }
+                    //Current collection
+                    current = GetAd(10);
+                    if(current > 50000)
+                    {
+                        if(current_count < 1000)
+                        {
+                            current_count++;
+                        }
+                        else
+                        {
+                            time_count = 65000;//out ok
+                        }
+                    }
+                    else
+                    {
+                        current_count = 0;
+                    }
+                    //count wait
+                     if(current_count_small < 3) {
+                        current_count_small++;
+                    } else {
+                        current_count_small = 0;
+                        time_count++;
+                    }
+                }
+                MAN_DIR8 = 0;//Set Direction
+                MAN_EN8 = 0;//Enable manipulator
+                if(MAN_OUT8 == 1)//To the positon of success
+                {
+                    button_flag = 1;//Start Check keys
+                    return 0x21;
+                }
+                else//Failure to position
+                {
+                    return 0x22;
+                }
+            }
+            else//position  ok
+            {
+                button_flag = 1;//Start Check keys
+                return 0x21;
+            }
           break;
         default:
           return 0x22;
