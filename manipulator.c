@@ -130,6 +130,7 @@ void ManipuInit(void)
         EepromWrite(24,0x00);
         EepromWrite(25,0x00);
     }
+    PC_ODR = 0XFF;
 }
 
 u8 ManipuGetNum(u8 cmd)

@@ -13,7 +13,10 @@ u8 EquipGetAddr(void);
 
 void EquipLed(u8 data);
 
-u8 EquipButon1(void);
-u8 EquipButon2(void);
+u8 EquipButonLeft(void);
+u8 EquipButonRight(void);
+u8 EquipButonUp(void);
+u8 EquipButonDown(void);
+u8 EquipButonOk(void);
 
 #endif

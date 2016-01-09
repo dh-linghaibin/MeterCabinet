@@ -18,6 +18,8 @@ static const u16 timerlow[15]={57000,44000,30000,20000,15000,
 static u8 cabinet_position = 0;
 static u16 cabinet_angle = 0;
 
+static u8 cabinet_encoder = 0;
+
 void SetpInit(void)
 {
     //
@@ -42,23 +44,29 @@ void SetpInit(void)
 	TIM3_ARRL = 0X01;
 	TIM3_IER = 0X01;
 	TIM3_CR1 = 0X00;
-    
     //EepromWrite(11,11);
-   // EepromWrite(12,0);
-    
-    if(EepromRead(14) == 0x55)
-    {
-        cabinet_position = EepromRead(10); //clear position
-        cabinet_angle = EepromRead(11);
-        cabinet_angle |= (EepromRead(12)>>8);
-    }
-    else
+    //EepromWrite(12,0);
+    if(EepromRead(14) != 0x55)
     {
         EepromWrite(14,0x55);
         EepromWrite(10,1);
         EepromWrite(11,0);
         EepromWrite(12,0);
+        EepromWrite(13,0);
     }
+    cabinet_position = EepromRead(10); //clear position
+    cabinet_angle = EepromRead(11);
+    cabinet_angle |= (EepromRead(12)>>8);
+    cabinet_encoder = (EepromRead(13));
+}
+
+void SetpSetEncoder(u8 cmd) {
+    cabinet_encoder = cmd;
+    EepromWrite(13,cmd);
+}
+
+u8 SetpReadEncoder(void) {
+    return cabinet_encoder;
 }
 
 u8 SetpGetPostion(void)
@@ -243,60 +251,6 @@ u8 SetpRotation(u8 tar_pos)
 {
     u16 angle = 0;//save Reaches the required angular position
     u16 result_move = 0;//需要旋转的角度值
-    //u32 steps; //电机需要旋转的脉冲
-    /*
-    if(tar_pos > 14)
-    {
-        angle =  (u16)( ( (tar_pos-1)*20.5) + 32);
-    }
-    else if(tar_pos > 10)
-    {
-        angle =  (u16)( ( (tar_pos-1)*20.5) + 24);
-    }
-    else if(tar_pos > 5)
-    {
-        angle =  (u16)( ( (tar_pos-1)*20.5) + 16);
-    }
-    else if(tar_pos > 2)
-    {
-        angle =  (u16)( ( (tar_pos-1)*20.5) + 8);
-    }
-    else if(tar_pos > 0)
-    {
-        angle =  (u16)( (tar_pos-1)*20.5);
-    }
-    else
-    {
-        return 0x22;
-    }*/
-    /*
-    if(angle < cabinet_angle)
-	{
-		if((cabinet_angle-angle) <= (Total_Circle/2))
-		{
-			moto_dr = 1;
-			result_move = cabinet_angle-angle;
-		}
-		else
-		{
-			moto_dr = 0;
-			result_move=Total_Circle+angle-cabinet_angle;
-		}
-	}
-	else if(angle>=cabinet_angle)
-	{
-		if((angle-cabinet_angle)<=(Total_Circle /2))
-		{
-			moto_dr = 0;
-			result_move=angle - cabinet00000000000000000000000000000000000000000000000000000000000000000_angle;
-		}
-		else if((angle - cabinet_angle)>(Total_Circle /2))
-		{
-			moto_dr = 1;
-			result_move=Total_Circle-angle+cabinet_angle;
-		}
-	}
-    */
     angle = stop_arr[tar_pos-1];
     if(cabinet_angle < angle)
 	{

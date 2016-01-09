@@ -118,304 +118,94 @@ void EquipLed(u8 data)
 #define BUTTON_IN4 PH_IDR_IDR3
 #define BUTTON_IN5 PF_IDR_IDR7
 
-u8 EquipButon1(void)
+u8 EquipButonUp(void)
 {
     static u16 button_count = 0;// key delay count
-    static u8 button_count_small = 0;// key delay count small
-    static u8 button_bit = 0;
-    if(BUTTON_IN1 == 0)
-    {
-        if(button_count_small < 10)
-        {
-            button_count_small++;
-        }
-        else
-        {
-            button_count_small = 0;
-            if(button_count < 30000)
-            {
+    if(BUTTON_IN1 == 0) {
+        if(button_count < 1000) {
+            button_count++;
+        } else {
+            if(button_count == 1000) {
                 button_count++;
-                if(button_count == 800)
-                {
-                    button_bit = 1;
-                }
-                else if(button_count == 10000)
-                {
-                    button_bit = 2;
-                }
-                else if(button_count == 20000)
-                {
-                    button_bit = 3;
-                }
-            }
-            else
-            {
-              button_count = 0;
+                return 0x01;
             }
         }
-    }
-    else
-    {
-        if(button_bit == 1)
-        {
-            button_bit = 4;
-        }
-        else if(button_bit == 2)
-        {
-            button_bit = 5;
-        }
-        else if(button_bit == 3)
-        {
-            button_bit = 6;
-        }
-        else
-        {
-            button_bit = 0;
-        }
+    } else {
         button_count = 0;
-        button_count_small = 0;
     }
-    return button_bit;
+    return 0x00;
 }
 
-u8 EquipButon2(void)
+u8 EquipButonOk(void)
 {
     static u16 button_count = 0;// key delay count
-    static u8 button_count_small = 0;// key delay count small
-    static u8 button_bit = 0;
-    if(BUTTON_IN2 == 0)
-    {
-        if(button_count_small < 10)
-        {
-            button_count_small++;
-        }
-        else
-        {
-            button_count_small = 0;
-            if(button_count < 30000)
-            {
+    if(BUTTON_IN2 == 0) {
+        if(button_count < 1000) {
+            button_count++;
+        } else {
+            if(button_count == 1000) {
                 button_count++;
-                if(button_count == 800)
-                {
-                    button_bit = 1;
-                }
-                else if(button_count == 10000)
-                {
-                    button_bit = 2;
-                }
-                else if(button_count == 20000)
-                {
-                    button_bit = 3;
-                }
-            }
-            else
-            {
-              button_count = 0;
+                return 0x01;
             }
         }
-    }
-    else
-    {
-        if(button_bit == 1)
-        {
-            button_bit = 4;
-        }
-        else if(button_bit == 2)
-        {
-            button_bit = 5;
-        }
-        else if(button_bit == 3)
-        {
-            button_bit = 6;
-        }
-        else
-        {
-            button_bit = 0;
-        }
+    } else {
         button_count = 0;
-        button_count_small = 0;
     }
-    return button_bit;
+    return 0x00;
 }
 
-u8 EquipButon3(void)
+u8 EquipButonRight(void)
 {
     static u16 button_count = 0;// key delay count
-    static u8 button_count_small = 0;// key delay count small
-    static u8 button_bit = 0;
-    if(BUTTON_IN3 == 0)
-    {
-        if(button_count_small < 50)
-        {
-            button_count_small++;
-        }
-        else
-        {
-            button_count_small = 0;
-            if(button_count < 30000)
-            {
+    if(BUTTON_IN3 == 0) {
+        if(button_count < 1000) {
+            button_count++;
+        } else {
+            if(button_count == 1000) {
                 button_count++;
-                if(button_count == 800)
-                {
-                    button_bit = 1;
-                }
-                else if(button_count == 10000)
-                {
-                    button_bit = 2;
-                }
-                else if(button_count == 20000)
-                {
-                    button_bit = 3;
-                }
-            }
-            else
-            {
-              button_count = 0;
+                return 0x01;
             }
         }
-    }
-    else
-    {
-        if(button_bit == 1)
-        {
-            button_bit = 4;
-        }
-        else if(button_bit == 2)
-        {
-            button_bit = 5;
-        }
-        else if(button_bit == 3)
-        {
-            button_bit = 6;
-        }
-        else
-        {
-            button_bit = 0;
-        }
+    } else {
         button_count = 0;
-        button_count_small = 0;
     }
-    return button_bit;
+    return 0x00;
 }
 
-u8 EquipButon4(void)
+u8 EquipButonLeft(void)
 {
     static u16 button_count = 0;// key delay count
-    static u8 button_count_small = 0;// key delay count small
-    static u8 button_bit = 0;
-    if(BUTTON_IN4 == 0)
-    {
-        if(button_count_small < 50)
-        {
-            button_count_small++;
-        }
-        else
-        {
-            button_count_small = 0;
-            if(button_count < 30000)
-            {
+    if(BUTTON_IN4 == 0) {
+        if(button_count < 1000) {
+            button_count++;
+        } else {
+            if(button_count == 1000) {
                 button_count++;
-                if(button_count == 800)
-                {
-                    button_bit = 1;
-                }
-                else if(button_count == 10000)
-                {
-                    button_bit = 2;
-                }
-                else if(button_count == 20000)
-                {
-                    button_bit = 3;
-                }
-            }
-            else
-            {
-              button_count = 0;
+                return 0x01;
             }
         }
-    }
-    else
-    {
-        if(button_bit == 1)
-        {
-            button_bit = 4;
-        }
-        else if(button_bit == 2)
-        {
-            button_bit = 5;
-        }
-        else if(button_bit == 3)
-        {
-            button_bit = 6;
-        }
-        else
-        {
-            button_bit = 0;
-        }
+    } else {
         button_count = 0;
-        button_count_small = 0;
     }
-    return button_bit;
+    return 0x00;
 }
 
-u8 EquipButon5(void)
+u8 EquipButonDown(void)
 {
     static u16 button_count = 0;// key delay count
-    static u8 button_count_small = 0;// key delay count small
-    static u8 button_bit = 0;
-    if(BUTTON_IN5 == 0)
-    {
-        if(button_count_small < 50)
-        {
-            button_count_small++;
-        }
-        else
-        {
-            button_count_small = 0;
-            if(button_count < 30000)
-            {
+    if(BUTTON_IN5 == 0) {
+        if(button_count < 1000) {
+            button_count++;
+        } else {
+            if(button_count == 1000) {
                 button_count++;
-                if(button_count == 800)
-                {
-                    button_bit = 1;
-                }
-                else if(button_count == 10000)
-                {
-                    button_bit = 2;
-                }
-                else if(button_count == 20000)
-                {
-                    button_bit = 3;
-                }
-            }
-            else
-            {
-              button_count = 0;
+                return 0x01;
             }
         }
-    }
-    else
-    {
-        if(button_bit == 1)
-        {
-            button_bit = 4;
-        }
-        else if(button_bit == 2)
-        {
-            button_bit = 5;
-        }
-        else if(button_bit == 3)
-        {
-            button_bit = 6;
-        }
-        else
-        {
-            button_bit = 0;
-        }
+    } else {
         button_count = 0;
-        button_count_small = 0;
     }
-    return button_bit;
+    return 0x00;
 }
 
 

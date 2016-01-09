@@ -9,5 +9,7 @@ void SetpInit(void);
 u8 SetpZero(void);
 u8 SetpRotation(u8 tar_pos);
 u8 SetpGetPostion(void);
+void SetpSetEncoder(u8 cmd);
+u8 SetpReadEncoder(void);
 
 #endif
