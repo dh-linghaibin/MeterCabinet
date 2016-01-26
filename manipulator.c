@@ -16,6 +16,8 @@ Sleep mode
 #include "iostm8s207m8.h"
 #include "eeprom.h"
 
+#define CURRY_EN 1000
+
 #define MAN_SLEEP PH_ODR_ODR7
 
 #define MAN_DIR1 PI_ODR_ODR0
@@ -130,7 +132,7 @@ void ManipuInit(void)
         EepromWrite(24,0x00);
         EepromWrite(25,0x00);
     }
-    PC_ODR = 0XFF;
+    PC_ODR = 0X00;
 }
 
 u8 ManipuGetNum(u8 cmd)
@@ -654,7 +656,7 @@ u8 ManipuDir(u8 bit,u8 dir)
                 {
                     if(MAN_BACK8 == 1)//position ok
                     {
-                        if(back_count < 500)
+                        if(back_count < 1000)
                         {
                             back_count++;
                         }
@@ -671,7 +673,7 @@ u8 ManipuDir(u8 bit,u8 dir)
                     current = GetAd(10);
                     if(current > 50000)
                     {
-                        if(current_count < 1000)
+                        if(current_count < 3000)
                         {
                             current_count++;
                         }
@@ -1116,9 +1118,9 @@ u8 ManipuDir(u8 bit,u8 dir)
                 MAN_EN7 = 1;//Enable manipulator
                 while(time_count < 60000)//time out 
                 {
-                    if(MAN_OUT1 == 1)//position ok
+                    if(MAN_OUT7 == 1)//position ok
                     {
-                        if(back_count < 500)
+                        if(back_count < 900)
                         {
                             back_count++;
                         }
@@ -1181,9 +1183,9 @@ u8 ManipuDir(u8 bit,u8 dir)
                 MAN_EN8 = 1;//Enable manipulator
                 while(time_count < 60000)//time out 
                 {
-                    if(MAN_OUT1 == 1)//position ok
+                    if(MAN_OUT8 == 1)//position ok
                     {
-                        if(back_count < 500)
+                        if(back_count < 1000)
                         {
                             back_count++;
                         }
@@ -1200,7 +1202,7 @@ u8 ManipuDir(u8 bit,u8 dir)
                     current = GetAd(10);
                     if(current > 50000)
                     {
-                        if(current_count < 1000)
+                        if(current_count < 3000)
                         {
                             current_count++;
                         }
@@ -1432,7 +1434,7 @@ u8 ManipuCheckLayer(u8 data,u8 cmd)
 u8 ManipuCheckOk(void)
 {
     u8 data = 0;
-    data = PB_IDR;
+    data = PE_IDR;
     data |= Shield;
 
     return data;

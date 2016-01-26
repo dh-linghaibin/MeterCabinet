@@ -35,6 +35,13 @@ void SetpInit(void)
     PD_CR1_bit.C10 = 0;
     PD_CR2_bit.C20 = 0;
     
+    PD_DDR_bit.DDR2 = 0;
+    PD_CR1_bit.C12 = 1;
+    PD_CR2_bit.C22 = 1;
+    
+    EXTI_CR1 |= BIT(7);//开启PD口中断
+	EXTI_CR1 &= ~BIT(6);
+    
     //3 Set the timer to generate an interrupt once 1ms
 	TIM3_PSCR  =0x00;  
 	TIM3_EGR = 0x01; 
@@ -244,8 +251,7 @@ static u16 stop_arr[16] = {
 };
 	
 //以下变量用于步进电机运行控制
- _Bool Encoder_bz;
-u16 Encoder_count;/*编码器计数*/
+static u16 Encoder_count;/*编码器计数*/
 
 u8 SetpRotation(u8 tar_pos)
 {
@@ -283,6 +289,7 @@ u8 SetpRotation(u8 tar_pos)
  	steps = result_move* Average_Pulse *2;
  	steps_half = steps/2;  
     
+    Encoder_count = 0;//clear
     
     n_max = 14;               //最高运行速度档位设置，可独立修改  
  	ksteps_inc = 20;          //根据运行质量进行修改这两个参数
@@ -328,9 +335,7 @@ u8 SetpRotation(u8 tar_pos)
 	moto_hz = 0;
 	DelayUs(2);
 	//WDT();//清看门狗
-	Encoder_bz = 0;/*开启编码器*/	
-	/*保存需要旋转的位置*/
-    
+	
 	cabinet_position = tar_pos; //clear position
     EepromWrite(10,cabinet_position);
     
@@ -384,4 +389,10 @@ __interrupt void TIM3_UPD_OVF_BRK_IRQHandler(void)
 __interrupt void TIM3_CAP_COM_IRQHandler(void)
 {
  
+}
+
+#pragma vector=8
+__interrupt void EXTI_PORTD_IRQHandler(void)
+{
+    Encoder_count++;
 }

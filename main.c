@@ -24,7 +24,7 @@ int main(void)
   Rs485Init();//com init  and TIM3 init
   SetpInit();//setpipulator init and TIM3 init
   LcdInit();//12864 lcd init 
-  MeunShow(0x56,0x00);
+  MeunShow(SetpGetPostion(),0x00);
   INTEN
   while(1)
   {
@@ -36,7 +36,7 @@ int main(void)
         } else {
             MenuSetPage(0x01);
         }
-        MeunShow(0x56,0x00);
+        MeunShow(SetpGetPostion(),0x00);
     }
     if(EquipButonLeft() == 0x01)
     {
@@ -46,7 +46,7 @@ int main(void)
         } else {
             MenuSetPage(0x03);
         }
-        MeunShow(0x56,0x00);
+        MeunShow(SetpGetPostion(),0x00);
     }
     if(EquipButonUp() == 0x01) {
         if(MenReadOk() == 0) {
@@ -60,7 +60,7 @@ int main(void)
         } else {
             if(MenReadRow() == 0) {
                 MenuAddRotate();
-            } else if(MenReadRow() == 1) {
+            } else if((MenReadRow() == 1)||(MenReadRow() == 2)) {
                 MenuAddDoor();
             }
         }
@@ -78,11 +78,11 @@ int main(void)
         } else {
             if(MenReadRow() == 0) {
                 MenuSubRotate();
-            } else if(MenReadRow() == 1) {
+            } else if((MenReadRow() == 1)||(MenReadRow() == 2)) {
                 MenuSubDoor();
             }
         }
-        MeunShow(0x56,0x00);
+        MeunShow(SetpGetPostion(),0x00);
     }
     if(EquipButonOk() == 0x01) {
         if(MenReadPage() == 0x02) {
@@ -112,7 +112,7 @@ int main(void)
                 }
             }
         }
-        MeunShow(0x56,0x00);
+        MeunShow(SetpGetPostion(),0x00);
     }
     ManipuBunRead();//Starts keys
     if(Rs485GetFlag() == 0x80)//Data sent over

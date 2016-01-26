@@ -35,18 +35,18 @@ u8 MenuGetRotate(void) {
 }
 
 void MenuAddDoor(void) {
-    if(menu_door_num < 16) {
+    if(menu_door_num < 8) {
         menu_door_num++;
     } else {
-        menu_door_num = 0;
+        menu_door_num = 1;
     }
 }
 
 void MenuSubDoor(void) {
-    if(menu_door_num > 0) {
+    if(menu_door_num > 1) {
         menu_door_num--;
     } else {
-        menu_door_num = 16;
+        menu_door_num = 8;
     }
 }
 

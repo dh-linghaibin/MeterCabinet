@@ -36,28 +36,25 @@ ActionState=1
 Enabled=0
 ShowSource=1
 [DebugChecksum]
-Checksum=-1522828816
+Checksum=959734504
 [CallStack]
 ShowArgs=0
 [Disassembly]
 MixedMode=1
+[array_types]
+Fmt0=u8[16]	4	0
 [watch_formats]
 Fmt0={W}0:cabinet_angle	3	0
 Fmt1={W}0:cabinet_position	3	0
-Fmt2={W}42:cabinet_angle	3	0
-Fmt3={W}42:cabinet_position	3	0
-Fmt4={W}42:menu_row	3	0
+Fmt2={W}42:Shield	4	0
+Fmt3={W}42:cabinet_angle	3	0
+Fmt4={W}42:cabinet_position	3	0
+Fmt5={W}42:menu_row	3	0
 [DataSample]
 LogEnabled=0
 GraphEnabled=0
 ShowTimeLog=1
 ShowTimeSum=1
-[Breakpoints]
-Bp0=_ "STD_DATA" "EquipGetAddr" 1 0 0 3 0 "" 0 ""
-Bp1=_ "STD_CODE" "{$PROJ_DIR$\..\equipment.c}.112.5" 0 0 0 0 "" 0 ""
-Bp2=_ "STD_DATA" "Drawer_back_place" 0 0 0 3 0 "" 0 ""
-Bp3=_ "STD_CODE" "{C:\Users\MyPC\Desktop}.329.3" 0 0 0 0 "" 0 ""
-Count=4
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -65,6 +62,15 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
+[Breakpoints]
+Bp0=_ "STD_DATA" "EquipGetAddr" 1 0 0 3 0 "" 0 ""
+Bp1=_ "STD_CODE" "{$PROJ_DIR$\..\equipment.c}.112.5" 0 0 0 0 "" 0 ""
+Bp2=_ "STD_DATA" "Drawer_back_place" 0 0 0 3 0 "" 0 ""
+Bp3=_ "STD_CODE" "{C:\Users\MyPC\Desktop}.329.3" 0 0 0 0 "" 0 ""
+Bp4=_ "STD_CODE" "{$PROJ_DIR$\manipulator.c}.1180.13" 1 0 0 0 "" 0 ""
+Bp5=_ "STD_CODE" "{$PROJ_DIR$\main.c}.129.17" 1 0 0 0 "" 0 ""
+Bp6=_ "STD_CODE" "{$PROJ_DIR$\main.c}.127.18" 1 0 0 0 "" 0 ""
+Count=7
 [Aliases]
 Count=0
 SuppressDialog=0

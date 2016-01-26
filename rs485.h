@@ -21,8 +21,8 @@
 
 #define CORRECT				0x88 //上行或下行。表示通讯成功
 #define ERROR			    0x44 //上行或下行。表示通讯出错
-#define TRUE                0x21
-#define FALSE 			    0x22
+#define TRUE                0x21 //正常
+#define FALSE 			    0x22 //错误
 
 void Rs485Init(void);
 void Rs485Send(u8 addr,u8 cmd,

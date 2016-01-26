@@ -71,6 +71,7 @@ void Rs485Send(u8 addr,u8 cmd,
     
     array[13] = array[1]+array[2];
     
+    array[14] = 0;//clear
     /*add check*/
     for(i_count = 3;i_count < 12;i_count++)
     {
