@@ -31,6 +31,7 @@ int main(void)
     if(EquipButonRight() == 0x01)
     {
         MenuSetOk(0);
+        Rs485Send(EquipGetAddr(),FALSE,ManipuCheckOk(),0,0,0,0,0,0,0,0,0);
         if(MenReadPage() < 3) {
             MenuSetPage(MenReadPage()+1);
         } else {

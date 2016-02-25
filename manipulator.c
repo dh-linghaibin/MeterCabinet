@@ -15,6 +15,7 @@ Sleep mode
 #include "manipulator.h"
 #include "iostm8s207m8.h"
 #include "eeprom.h"
+#include "setppermotor.h"
 
 #define CURRY_EN 1000
 
@@ -180,6 +181,11 @@ u8 ManipuDir(u8 bit,u8 dir)
     u8 current_count_small = 0;
     u8 user_data = 0;
     u8 read_add = 21;
+    
+    if(SetpGetLockBit() == 1) {
+        return 0x21;
+    }
+    
     for(read_add = 21; read_add < 26;read_add++) {
         user_data = EepromRead(read_add);
         if(user_data != 0xff) {
@@ -1434,7 +1440,7 @@ u8 ManipuCheckLayer(u8 data,u8 cmd)
 u8 ManipuCheckOk(void)
 {
     u8 data = 0;
-    data = PE_IDR;
+    data = PB_IDR;
     data |= Shield;
 
     return data;

@@ -26,7 +26,7 @@ void MenuSubRotate(void) {
     if(menu_rotate_num > 0) {
         menu_rotate_num--;
     } else {
-        menu_rotate_num = 16;
+        menu_rotate_num = 100;//²âÊÔ
     }
 }
 

@@ -20,6 +20,8 @@ static u16 cabinet_angle = 0;
 
 static u8 cabinet_encoder = 0;
 
+static u8 Lock_bit = 0;
+
 void SetpInit(void)
 {
     //
@@ -60,11 +62,23 @@ void SetpInit(void)
         EepromWrite(11,0);
         EepromWrite(12,0);
         EepromWrite(13,0);
+        EepromWrite(16,0);
     }
     cabinet_position = EepromRead(10); //clear position
     cabinet_angle = EepromRead(11);
     cabinet_angle |= (EepromRead(12)>>8);
     cabinet_encoder = (EepromRead(13));
+    Lock_bit = EepromRead(16);
+}
+
+
+void SetpSetLockBit(u8 num) {
+    Lock_bit = num;
+    EepromWrite(16,Lock_bit);
+}
+
+u8 SetpGetLockBit(void) {
+    return Lock_bit;
 }
 
 void SetpSetEncoder(u8 cmd) {
@@ -98,6 +112,7 @@ u8 SetpZero(void)
 	u16 stepes = 0;
 	u16 stepes_2 = 0;
     u16 duozou = 0;
+    SetpSetLockBit(0);
 	moto_dr = 0;/*改变方向*/
 	if(b_sar == 0)//不在零位
 	{
@@ -249,44 +264,73 @@ static u32 steps_keep_count;
 static u16 stop_arr[16] = {
 0,23,54,77,100,122,154,177,200,223,254,277,300,322,354,377,
 };
-	
 //以下变量用于步进电机运行控制
 static u16 Encoder_count;/*编码器计数*/
+
 
 u8 SetpRotation(u8 tar_pos)
 {
     u16 angle = 0;//save Reaches the required angular position
     u16 result_move = 0;//需要旋转的角度值
-    angle = stop_arr[tar_pos-1];
-    if(cabinet_angle < angle)
-	{
-		if((angle-cabinet_angle) <= (Total_Circle/2))
-		{
-			moto_dr = 1;/*改变方向*/
-			result_move = angle-cabinet_angle;
-		}
-		else
-		{
-			moto_dr = 0;/*改变方向*/
-			result_move=Total_Circle+cabinet_angle-angle;
-		}
-	}
-	else if(cabinet_angle>=angle)
-	{
-		if((cabinet_angle-angle)<=(Total_Circle /2))
-		{
-			moto_dr = 0;/*改变方向*/
-			result_move=cabinet_angle-angle;
-		}
-		else if((cabinet_angle-angle)>(Total_Circle /2))
-		{
-			moto_dr = 1;/*改变方向*/
-			result_move=Total_Circle-cabinet_angle+angle;
-		}
-	}
+    if(tar_pos == 100) {//增加锁死功能
+        if(Lock_bit == 0) {
+            SetpSetLockBit(1);
+            moto_dr = 1;/*改变方向*/
+            steps = 525;
+        } else {
+            return 0;
+        }
+    } else {
+        angle = stop_arr[tar_pos-1];
+        if(cabinet_angle < angle)
+        {
+            if((angle-cabinet_angle) <= (Total_Circle/2))
+            {
+                moto_dr = 1;/*改变方向*/
+                result_move = angle-cabinet_angle;
+            }
+            else
+            {
+                moto_dr = 0;/*改变方向*/
+                result_move=Total_Circle+cabinet_angle-angle;
+            }
+        }
+        else if(cabinet_angle>=angle)
+        {
+            if((cabinet_angle-angle)<=(Total_Circle /2))
+            {
+                moto_dr = 0;/*改变方向*/
+                result_move=cabinet_angle-angle;
+            }
+            else if((cabinet_angle-angle)>(Total_Circle /2))
+            {
+                moto_dr = 1;/*改变方向*/
+                result_move=Total_Circle-cabinet_angle+angle;
+            }
+        } 
+        steps = result_move* Average_Pulse *2;
+        if(Lock_bit == 1) { 
+            SetpSetLockBit(0);
+            /*if(moto_dr == 0) {
+                steps -= 175;
+            } else {
+                steps += 175;
+            }*/
+            if(steps == 0) {
+                moto_dr = 0;/*改变方向*/
+                steps = 525;
+            } else {
+                if(moto_dr == 0) {
+                    steps += 525;
+                } else {
+                    steps -= 525;
+                }
+            }
+        }
+        //if(result_move == 0) return 0;
+       if(steps == 0) return 0;
+    }
     
-    if(result_move == 0) return 0;
- 	steps = result_move* Average_Pulse *2;
  	steps_half = steps/2;  
     
     Encoder_count = 0;//clear
@@ -335,14 +379,14 @@ u8 SetpRotation(u8 tar_pos)
 	moto_hz = 0;
 	DelayUs(2);
 	//WDT();//清看门狗
-	
-	cabinet_position = tar_pos; //clear position
-    EepromWrite(10,cabinet_position);
-    
-    cabinet_angle = angle;
-	EepromWrite(11,cabinet_angle);
-    EepromWrite(12,cabinet_angle<<8);
-    
+	if(Lock_bit ==  0) {
+        cabinet_position = tar_pos; //clear position
+        EepromWrite(10,cabinet_position);
+        
+        cabinet_angle = angle;
+        EepromWrite(11,cabinet_angle);
+        EepromWrite(12,cabinet_angle<<8);
+    }
 	return result_move;
 }
 

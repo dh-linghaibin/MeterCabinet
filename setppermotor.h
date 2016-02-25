@@ -12,4 +12,6 @@ u8 SetpGetPostion(void);
 void SetpSetEncoder(u8 cmd);
 u8 SetpReadEncoder(void);
 
+u8 SetpGetLockBit(void);
+
 #endif
