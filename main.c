@@ -28,6 +28,7 @@ int main(void)
   INTEN
   while(1)
   {
+    //SetpZero();
     if(EquipButonRight() == 0x01)
     {
         MenuSetOk(0);
@@ -109,6 +110,7 @@ int main(void)
                     break;
                     case 3:
                         SetpZero();
+                        //test();
                     break;
                 }
             }
@@ -118,6 +120,7 @@ int main(void)
     ManipuBunRead();//Starts keys
     if(Rs485GetFlag() == 0x80)//Data sent over
     {
+        u8 bit = 0;
         if(Rs485Check() == CORRECT)//chaeck
         {
             Rs485Send(EquipGetAddr(),CORRECT,0,0,0,0,0,0,0,0,0,0);//Verification is successful
@@ -185,13 +188,14 @@ int main(void)
               break;
             case Detection_barrier:
               ManipuSetShiel(Rs485GetDate(2));
-              if(ManipuCheckOk() == 0xff)
+              bit = ManipuCheckOk();
+              if(bit == 0xff)
               {
-                Rs485Send(EquipGetAddr(),TRUE,ManipuCheckOk(),0,0,0,0,0,0,0,0,0);
+                Rs485Send(EquipGetAddr(),TRUE,bit,0,0,0,0,0,0,0,0,0);
               }
               else
               {
-                Rs485Send(EquipGetAddr(),FALSE,ManipuCheckOk(),0,0,0,0,0,0,0,0,0);
+                Rs485Send(EquipGetAddr(),FALSE,bit,0,0,0,0,0,0,0,0,0);
               }
               break;
             default:

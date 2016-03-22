@@ -5,9 +5,6 @@
 #include "delay.h"
 #include "eeprom.h"
 
-static const u16 timerlow[15]={57000,44000,30000,20000,15000,
-12000,11000,10000,9000,8500,8000,7500,7300,7100,7000};
-
 #define Total_Circle 400
 #define Average_Pulse	35	 //Single drawer pulse equivalent 175
 
@@ -47,9 +44,9 @@ void SetpInit(void)
     //3 Set the timer to generate an interrupt once 1ms
 	TIM3_PSCR  =0x00;  
 	TIM3_EGR = 0x01; 
-	TIM3_CNTRH = 0x0;          // Counter Starting Value;
+	TIM3_CNTRH = 0x0;// Counter Starting Value;
 	TIM3_CNTRL = 0x0;     
-	TIM3_ARRH = 0X40;
+	TIM3_ARRH = 0Xff;
 	TIM3_ARRL = 0X01;
 	TIM3_IER = 0X01;
 	TIM3_CR1 = 0X00;
@@ -109,9 +106,13 @@ void SetpStart(u8 cmd)
 u8 SetpZero(void)
 {
     u8 cheack_save = 0;//保存位置状态
-	u16 stepes = 0;
-	u16 stepes_2 = 0;
+    u16 zero_setp = 500;
+	//u16 stepes = 0;
+	//u16 stepes_2 = 0;
+    u16 time_count = 0;
+    u16 time_speed_count = 0;
     u16 duozou = 0;
+    u16 run_setp = 3000;//开始跑得脉冲
     SetpSetLockBit(0);
 	moto_dr = 0;/*改变方向*/
 	if(b_sar == 0)//不在零位
@@ -120,120 +121,91 @@ u8 SetpZero(void)
 		while(b_sar == 0)
 		{
 			//WDT();//清看门狗
-			if(stepes < 100)
-			{
-				moto_hz = !moto_hz;
-				DelayUs(1500);
-				stepes++;
-			}
-			else if(stepes < 200)
-			{
-				moto_hz = !moto_hz;
-				DelayUs(1200);
-				stepes++;
-			}
-			else if(stepes < 300)
-			{
-				moto_hz = !moto_hz;
-				DelayUs(1100);
-				stepes++;
-			}
-			else if(stepes < 400)
-			{
-				moto_hz = !moto_hz;
-				DelayUs(1000);
-				stepes++;
-			}
-			else if(stepes < 500)
-			{
-				moto_hz = !moto_hz;
-				DelayUs(1000);
-				stepes++;
-			}
-			else if(stepes < 600)
-			{
-				moto_hz = !moto_hz;
-				DelayUs(1000);
-				stepes++;
-			}
-			else
-			{
-				moto_hz = !moto_hz;
-				DelayUs(1000);
-			}
+            if(time_count < run_setp) {
+                time_count++;
+            } else {
+                time_count = 0;
+                moto_hz = !moto_hz;
+            }
+            if(time_speed_count < 150) {
+                time_speed_count++;
+            } else {
+                time_speed_count = 0;
+                if(run_setp > 700) {
+                    run_setp--;
+                }
+            }
 		}
 	}
 	else//在零位
 	{
-		stepes = 200;
+		//stepes = 200;
+        run_setp = 4000;
 	}
-	while(stepes)//在零位
+	while(run_setp < 6000)//在零位
 	{
-		//WDT();//清看门狗
-		if(stepes > 600)
-		{
-			moto_hz = !moto_hz;
-			DelayUs(1000);
-			stepes_2++;
-			if(stepes_2 == 100)
-			{
-				stepes_2 = 0;
-				stepes = 550;
-			}
-		}
-		else if(stepes > 500)
-		{
-			moto_hz = !moto_hz;
-			DelayUs(2000);
-			stepes_2++;
-			if(stepes_2 == 100)
-			{
-				stepes_2 = 0;
-				stepes = 450;
-			}
-		}
-		else if(stepes > 400)
-		{
-			moto_hz = !moto_hz;
-			DelayUs(3000);
-			stepes_2++;
-			if(stepes_2 == 100)
-			{
-				stepes_2 = 0;
-				stepes = 350;
-			}
-		}
-		else //if(stepes > 300)
-		{
-			moto_hz = !moto_hz;
-			DelayUs(4200);
-			stepes_2++;
-			if(stepes_2 == 300)
-			{
-				stepes_2 = 0;
-				stepes = 0;
-			}
-		}
+        static u16 de_bit = 0;
+        if(time_count < run_setp) {
+            time_count++;
+        } else {
+            time_count = 0;
+            moto_hz = !moto_hz;
+        }
+        if(time_speed_count < zero_setp) {
+            time_speed_count++;
+        } else {
+            time_speed_count = 0;
+            if(run_setp > 1000) {
+                zero_setp = 350;
+            }
+            if(run_setp == 5900) {
+                if(de_bit < 100) {
+                    de_bit++;
+                } else {
+                    run_setp = 6001;
+                }
+            } else {
+                run_setp++;
+            }
+        }
 	}
-	DelayUs(300);
+    while(duozou < 500)
+	{
+		if(time_count < 7000) {
+            time_count++;
+        } else {
+            time_count = 0;
+            moto_hz = !moto_hz;
+        }
+		duozou++;
+		//WDT();//清看门狗
+	}
+	DelayMs(2000);
 	//WDT();//清看门狗
 	moto_dr = 1;/*改变方向*/
 	while(b_sar == 0)
 	{
 		cheack_save ++;//不在零位
-		moto_hz = !moto_hz;
-		DelayUs(4200);
+		if(time_count < 7000) {
+            time_count++;
+        } else {
+            time_count = 0;
+            moto_hz = !moto_hz;
+        }
 		//WDT();//清看门狗
 	}
 	duozou = 0;
 	while(duozou < 50)
 	{
-		moto_hz = !moto_hz;
-		DelayUs(4200);
+		if(time_count < 7000) {
+            time_count++;
+        } else {
+            time_count = 0;
+            moto_hz = !moto_hz;
+        }
 		duozou++;
 		//WDT();//清看门狗
 	}
-	
 	cabinet_position = 1; //clear position
     EepromWrite(10,cabinet_position);
     cabinet_angle = 0;
@@ -249,10 +221,10 @@ u8 SetpZero(void)
 	}
 }
 
-static u8 k; 
-static u8 up_or_down;           
-static u8 half_over; 
-static u8 n_max;
+static u16 k; 
+static u16 up_or_down;           
+static u16 half_over; 
+static u16 n_max;
 static u16 ksteps;       
 static u16 ksteps_inc; 
 static u16 ksteps_save;
@@ -262,14 +234,25 @@ static u32 steps_count;
 static u32 steps_count2;  
 static u32 steps_keep_count;
 static u16 stop_arr[16] = {
-0,23,54,77,100,122,154,177,200,223,254,277,300,322,354,377,
+//0,23,54,77,100,122,154,177,200,223,254,277,300,322,354,377,
+0,23,46,68,100,123,146,168,200,223,246,268,300,323,346,368,
 };
+
+/*
+static const u16 timerlow[15]={57000,44000,30000,20000,15000,
+12000,11000,10000,9000,8500,8000,7500,7300,7100,7000};*/
+
+volatile u16 timerlow[40]={
+60000,58000,56000,54000,52000,50000,48000,46000,44000,42000,
+40000,38000,36000,34000,24000,23000,22000,21000,19000,17500,
+16000,15000,14000,13000,11500,10500,9500,8500,7900,7400,
+6800,6200,5900,5700,5600,5500,5300,5200,5100,5000,
+};
+
 //以下变量用于步进电机运行控制
 static u16 Encoder_count;/*编码器计数*/
 
-
-u8 SetpRotation(u8 tar_pos)
-{
+u8 SetpRotation(u8 tar_pos) {
     u16 angle = 0;//save Reaches the required angular position
     u16 result_move = 0;//需要旋转的角度值
     if(tar_pos == 100) {//增加锁死功能
@@ -330,14 +313,21 @@ u8 SetpRotation(u8 tar_pos)
         //if(result_move == 0) return 0;
        if(steps == 0) return 0;
     }
+    /*
+    for(int i = 0; i < 39; ++i) {
+      static u16 num = 1800;
+      WaitTable[i+1] = WaitTable[i]-num;//60000 - (num*i);
+      num -= 20;
+    }*/
+
     
  	steps_half = steps/2;  
     
     Encoder_count = 0;//clear
     
-    n_max = 14;               //最高运行速度档位设置，可独立修改  
- 	ksteps_inc = 20;          //根据运行质量进行修改这两个参数
- 	ksteps_save = 10;  
+    n_max = 38;               //最高运行速度档位设置，可独立修改  
+ 	ksteps_inc = 3;          //根据运行质量进行修改这两个参数 20
+ 	ksteps_save = 2;        //10
  	steps_count = 0;
  	steps_count2 = 0; 
  	up_or_down = 1;
@@ -391,6 +381,22 @@ u8 SetpRotation(u8 tar_pos)
 }
 
 
+void test(void) {
+    static u16 count = 0;
+    up_or_down = 100;
+    SetpStart(1);
+    while(1) {
+        if(count < 15000) {
+            count++;
+        } else {
+            count = 0;
+            if(k < 250) {
+                k++;
+            }
+        }
+    }
+}
+
 #pragma vector=0x11
 __interrupt void TIM3_UPD_OVF_BRK_IRQHandler(void)
 {
@@ -398,7 +404,9 @@ __interrupt void TIM3_UPD_OVF_BRK_IRQHandler(void)
     TIM3_SR1 &= (~0x01);        //清除中断标志
     
     SetpHzSet(timerlow[k]);
-   // WDT();//清看门狗
+    //SetpHzSet(WaitTable[k]);
+    //moto_hz = !moto_hz;
+    
     if(up_or_down == 1)
     {
         ksteps--;
@@ -432,7 +440,7 @@ __interrupt void TIM3_UPD_OVF_BRK_IRQHandler(void)
 #pragma vector=0x12
 __interrupt void TIM3_CAP_COM_IRQHandler(void)
 {
- 
+    
 }
 
 #pragma vector=8

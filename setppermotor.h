@@ -14,4 +14,6 @@ u8 SetpReadEncoder(void);
 
 u8 SetpGetLockBit(void);
 
+void test(void);
+
 #endif

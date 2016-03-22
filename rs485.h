@@ -8,10 +8,10 @@
 
 #define Back_zero           0x01 /*回零*/
 #define Motor_rotation      0x02 /*旋转*/
-#define Drawer_out          0x03 /*机械手出去*/
-#define Drawer_out_place    0x04 /*机械手出去到位*/
-#define Drawer_back         0x05 /*机械手回来*/
-#define Drawer_back_place   0x06 /*机械手回来到位*/
+#define Drawer_out          0x03 /*机械手回来*/
+#define Drawer_out_place    0x04 /*机械手回来到位*/
+#define Drawer_back         0x05 /*机械手出去*/
+#define Drawer_back_place   0x06 /*机械手出去到位*/
 #define Button_detection 	0x07 /*按钮是否按下*/
 #define Button_led       	0x08 /*按钮指示灯*/
 #define Light              	0x09 /*照明灯*/

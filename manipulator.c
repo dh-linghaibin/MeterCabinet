@@ -16,6 +16,7 @@ Sleep mode
 #include "iostm8s207m8.h"
 #include "eeprom.h"
 #include "setppermotor.h"
+#include "Delay.h"
 
 #define CURRY_EN 1000
 
@@ -66,7 +67,7 @@ Sleep mode
 #define MAN_LIGHT7 PC_ODR_ODR6
 #define MAN_LIGHT8 PC_ODR_ODR7
 
-static u8 Shield = 0;//save shiled
+static u8 Shield = 0XFF;//save shiled
 
 void ManipuInit(void)
 {
@@ -122,7 +123,7 @@ void ManipuInit(void)
     ADC_CR2 |= BIT(1);//Scan mode is enabled
     //ADC_TDRL = 0x01;
     //ADC_CR1 &= ~BIT(0);
-    
+   
     data = EepromRead(20); //clear position
     if(data != 0x55)
     {
@@ -199,6 +200,7 @@ u8 ManipuDir(u8 bit,u8 dir)
         switch(bit)
         {
         case 1:
+        line1:
             if(MAN_BACK1 == 0)//Not in place
             {
                 MAN_DIR1 = 1;//Set Direction
@@ -264,6 +266,7 @@ u8 ManipuDir(u8 bit,u8 dir)
             }
         break;
         case 2:
+        line2:
             if(MAN_BACK2 == 0)//Not in place
             {
                 MAN_DIR2 = 1;//Set Direction
@@ -329,6 +332,7 @@ u8 ManipuDir(u8 bit,u8 dir)
             }
         break;
         case 3:
+        line3:
             if(MAN_BACK3 == 0)//Not in place
             {
                 MAN_DIR3 = 1;//Set Direction
@@ -394,6 +398,7 @@ u8 ManipuDir(u8 bit,u8 dir)
             }
         break;
         case 4:
+        line4:
             if(MAN_BACK4 == 0)//Not in place
             {
                 MAN_DIR4 = 1;//Set Direction
@@ -459,6 +464,7 @@ u8 ManipuDir(u8 bit,u8 dir)
             }
         break;
         case 5:
+        line5:
             if(MAN_BACK5 == 0)//Not in place
             {
                 MAN_DIR5 = 1;//Set Direction
@@ -524,6 +530,7 @@ u8 ManipuDir(u8 bit,u8 dir)
             }
         break;
         case 6:
+        line6:
             if(MAN_BACK6 == 0)//Not in place
             {
                 MAN_DIR6 = 1;//Set Direction
@@ -589,6 +596,7 @@ u8 ManipuDir(u8 bit,u8 dir)
             }
         break;
         case 7:
+        line7:
             if(MAN_BACK7 == 0)//Not in place
             {
                 MAN_DIR7 = 1;//Set Direction
@@ -654,6 +662,7 @@ u8 ManipuDir(u8 bit,u8 dir)
             }
         break;
         case 8:
+        line8:
             if(MAN_BACK8 == 0)//Not in place
             {
                 MAN_DIR8 = 1;//Set Direction
@@ -751,9 +760,9 @@ u8 ManipuDir(u8 bit,u8 dir)
                     }
                     //Current collection
                     current = GetAd(10);
-                    if(current > 50000)
+                    if(current > 20000)
                     {
-                        if(current_count < 1000)
+                        if(current_count < 2000)
                         {
                             current_count++;
                         }
@@ -782,8 +791,12 @@ u8 ManipuDir(u8 bit,u8 dir)
                     return 0x21;
                 }
                 else//Failure to position
-                {
-                    return 0x22;
+                {DelayMs(100);
+                time_count = 0;
+                current_count = 0;
+                    goto line1;
+                    
+                    //return 0x22;
                 }
             }
             else//position  ok
@@ -1440,9 +1453,8 @@ u8 ManipuCheckLayer(u8 data,u8 cmd)
 u8 ManipuCheckOk(void)
 {
     u8 data = 0;
-    data = PB_IDR;
+    data = PE_IDR;
     data |= Shield;
-
     return data;
 }
 
